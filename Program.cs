@@ -26,4 +26,12 @@ class Program
 
         
     }
+
+    static async Task<string> GetCoinPriceOnDate(string coinId, string date)
+    {
+        string url = $"https://api.coingecko.com/api/v3/coins/{coinId}/history?date={date}";
+
+        
+
+    }
 }
