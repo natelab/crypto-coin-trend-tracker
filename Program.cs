@@ -24,6 +24,19 @@ class Program
 
         Console.WriteLine("\nThe Program is fetching data, please wait patiently...\n"); //Telling the user to wait
 
+        var price = await GetCoinPriceOnDate(coinId, dateInput);
+        var news = await GetNewsForDate(coinId, date.ToString("yyyy-MM-dd"));
+
+        Console.WriteLine($"Coin: {coinId.ToUpper()}");
+        Console.WriteLine($"Date: {date:yyyy-MM-dd}";
+        Console.WriteLine($"Price: {price}\n");
+
+        Console.WriteLine("News Headlines: ");
+        foreach (var headline in news)
+        {
+            Console.WriteLine($"- {headline}");
+        }
+
         
     }
 
@@ -42,6 +55,22 @@ class Program
 
     static async Task<string[]> GetNewsForDate(string query, string date)
     {
-        string apiKey = "My Unique Api Key"; //Just put a placeholder value for nows
+        string apiKey = "My Unique Api Key"; //Just put a placeholder value for now
+        string url = $"https://newsapi.org/v2/everything?q={query}&from={date}&to={date}&sortBy=popularity&apiKey={apiKey}";
+
+        using HttpClient client = new();
+        var response = await client.GetStringAsync(url);
+        var json = JObject.Parse(response);
+
+        var articles = json["articles"];
+        if (articles == null) return new[] { "No news has been found." };
+
+        var headlines = new String[Math.Min(5, articles.Count())];
+        for (int i = 0; i < headlines.Length; i++)
+        {
+            headlines[i] = articles[i]?["title"]?.ToString();
+        }
+
+        return headlines;
     }
 }
