@@ -29,9 +29,19 @@ class Program
 
     static async Task<string> GetCoinPriceOnDate(string coinId, string date)
     {
-        string url = $"https://api.coingecko.com/api/v3/coins/{coinId}/history?date={date}";
+        string url = $"https://api.coingecko.com/api/v3/coins/{coinId}/history?date={date}"; //This is where the api is found
 
-        
+        using HttpClient client = new();
+        var response = await client.GetStringAsync(url) ; //Send GET request
+        var json = JObject.Parse(response) ; //Parsing the string into a JObject so that it can be easily accessed via JSON
 
+        var price = json["market_data"]?["current_price"]?["usd"]; //Extracting the usd price from the JSON object
+        return price != null ? $"${price}" : "Price not found."; //Return price
+
+    }
+
+    static async Task<string[]> GetNewsForDate(string query, string date)
+    {
+        string apiKey = "My Unique Api Key"; //Just put a placeholder value for nows
     }
 }
